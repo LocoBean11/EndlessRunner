@@ -1,4 +1,4 @@
-class Load extends Phaser.Scene {
+/*class Load extends Phaser.Scene {
     constructor() {
         super("loadScene");
     }
@@ -16,9 +16,19 @@ class Load extends Phaser.Scene {
             loadingBar.destroy();
         });
 
+        this.load.path = './assets/';
+
     }
 
 create() {
-    this.add.text(20, 20, "Endless Runner Loading");
+     // check for local storage browser support
+     if(window.localStorage) {
+        console.log('Local storage supported');
+    } else {
+        console.log('Local storage not supported');
+    }
+
+    // go to Title scene
+    this.scene.start('playScene');
   }
-}
+}*/

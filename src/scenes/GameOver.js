@@ -1,4 +1,4 @@
-class GameOver extends Phaser.Scene {
+/*class GameOver extends Phaser.Scene {
     constructor() {
         super("gameoverScene");
     }
@@ -7,4 +7,4 @@ class GameOver extends Phaser.Scene {
 create() {
     this.add.text(20, 20, "Game Over");
   }
-}
+}*/
