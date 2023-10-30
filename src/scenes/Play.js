@@ -6,6 +6,7 @@ class Play extends Phaser.Scene {
         preload(){
             this.load.image('background', './assets/MouthBackground.png');
             this.load.image('tooth', './assets/tooth.png');
+            this.load.image('lollipop', './assets/Lollipop.png');
             this.load.audio('surfingstars', './assets/surfingstars.mp3');
         }
 
@@ -33,7 +34,8 @@ create() {
      this.add.rectangle(game.config.width - borderUISize, 0, borderUISize, game.config.height, 0xFFFFFF).setOrigin(0 ,0);
 
     //add tooth (p1)
-    this.p1Tooth = this.physics.add.sprite(game.config.width/2, game.config.height /2 - borderUISize - borderPadding, 'tooth').setOrigin(0.5, 0);
+    this.p1Tooth = this.physics.add.sprite(game.config.width * -2, game.config.height /2 - borderUISize - borderPadding, 'tooth').setOrigin(0.5, 0);
+    this.p1Tooth.setScale(1.5);
 
     // Set up other properties for the player sprite
     this.p1Tooth.setCollideWorldBounds(true);
@@ -42,21 +44,13 @@ create() {
     this.p1Tooth.setMaxVelocity(0, 600);
     this.p1Tooth.setDragY(200);
 
+    //Add junk food
+    this.Lollipop01 = this.physics.add.sprite(game.config.width + borderUISize*6, borderUISize*4, 'lollipop', 0, 30).setOrigin(0, 0);
+    this.Lollipop01.setScale(1.5);
+
     //define keys
     keyUP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
     keyDOWN = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
-
-     // set up player paddle (physics sprite) and set properties
-    /* tooth = this.physics.add.sprite(32, 'tooth').setOrigin(0.5);
-     tooth.setCollideWorldBounds(true);
-     tooth.setBounce(0.5);
-     tooth.setImmovable();
-     tooth.setMaxVelocity(0, 600);
-     tooth.setDragY(200);
-     //tooth.setDepth(1);             // ensures that paddle z-depth remains above shadow paddles
-     tooth.destroyed = false;       // custom property to track paddle life
-     //tooth.setBlendMode('SCREEN');  // set a WebGL blend mode
-*/
 
         // initialize score
         this.p1Score = 0;
@@ -76,12 +70,17 @@ create() {
         }
 
         this.scoreLeft = this.add.text(borderUISize + borderPadding, borderUISize + borderPadding*2, this.p1Score, scoreConfig);
+
+          // Game Over flag
+          this.gameOver = false;
+
+
+         // increaseLollipopSpeed()
+          //this.Lollipop.increaseSpeed(2);
+          
   }
 
   update(){
-
-        
-        
     this.MouthBackground.tilePositionX += 4;  // update tile sprite
 
     if (keyUP.isDown) {
@@ -97,7 +96,15 @@ create() {
 
     if(!this.gameOver){
         this.p1Tooth.update();
+        this.Lollipop01.update();
     }
 
-  }
+     // check collisions
+     /*if(this.checkCollision(this.p1Tooth, this.Lollipop01)) {
+        this.p1Tooth.reset();
+        //this.LollipopDestroy(this.Lollipop);
+    }*/
+
+    }
+
 }
