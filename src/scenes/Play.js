@@ -48,6 +48,9 @@ create() {
     this.Lollipop01 = this.physics.add.sprite(game.config.width + borderUISize*6, borderUISize*4, 'lollipop', 0, 30).setOrigin(0, 0);
     this.Lollipop01.setScale(1.5);
 
+    // Randomly spawn lollipops on the right side
+    
+
     //define keys
     keyUP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
     keyDOWN = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
@@ -98,6 +101,7 @@ create() {
         this.p1Tooth.update();
         this.Lollipop01.update();
     }
+
 
      // check collisions
      /*if(this.checkCollision(this.p1Tooth, this.Lollipop01)) {
