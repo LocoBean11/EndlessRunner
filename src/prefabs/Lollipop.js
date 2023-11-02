@@ -4,7 +4,7 @@ class Lollipop extends Phaser.GameObjects.Sprite{
         scene.add.existing(this);
         //this.points = pointValue;
         this.moveSpeed = 2; //pixels per frame
-    //this.fasterMoveSpeed = game.settings.lollipopSpeed; //JunkFood move faster after 30 seconds
+        //this.fasterMoveSpeed = game.settings.lollipopSpeed; //JunkFood move faster after 30 seconds
     }
 
     update() {

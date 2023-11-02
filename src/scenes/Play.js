@@ -80,8 +80,15 @@ create() {
 
           //this.increaseJunkFoodSpeed(2);
           
-          
-  }
+          // Set a timer to increase speed after 30 seconds
+          /*this.time.addEvent({
+            delay: 30000, // 30 seconds in milliseconds
+            callback: this.increaseLollipopSpeed,
+            callbackScope: this,
+            loop: false // Do not repeat the timer
+          });*/
+        }
+  
 
   update(){
     this.MouthBackground.tilePositionX += 4;  // update tile sprite
@@ -104,7 +111,7 @@ create() {
 
 
      // check collisions
-    /* if(this.checkCollision(this.p1Tooth, this.lollipop)) {
+    /*if(this.checkCollision(this.p1Tooth, this.lollipop)) {
         this.p1Tooth.reset();
         this.lollipopDestroy(this.lollipop);
     }*/
