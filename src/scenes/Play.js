@@ -6,7 +6,7 @@ class Play extends Phaser.Scene {
         preload(){
             this.load.image('background', './assets/MouthBackground.png');
             this.load.image('tooth', './assets/tooth.png');
-            this.load.image('lollipop', './assets/Lollipop.png');
+            this.load.image('lollipop', './assets/lollipop.png');
             this.load.audio('surfingstars', './assets/surfingstars.mp3');
         }
 
@@ -45,8 +45,8 @@ create() {
     this.p1Tooth.setDragY(200);
 
     //Add junk food
-    this.Lollipop01 = this.physics.add.sprite(game.config.width + borderUISize*6, borderUISize*4, 'lollipop', 0, 30).setOrigin(0, 0);
-    this.Lollipop01.setScale(1.5);
+    this.junkfood01 = new Lollipop(this, game.config.width + borderUISize*6, borderUISize*4, 'lollipop', 0, 30).setOrigin(0, 0);
+    this.junkfood01.setScale(1.5);
 
     // Randomly spawn lollipops on the right side
     
@@ -78,8 +78,8 @@ create() {
           this.gameOver = false;
 
 
-         // increaseLollipopSpeed()
-          //this.Lollipop.increaseSpeed(2);
+          //this.increaseJunkFoodSpeed(2);
+          
           
   }
 
@@ -99,15 +99,17 @@ create() {
 
     if(!this.gameOver){
         this.p1Tooth.update();
-        this.Lollipop01.update();
+        this.junkfood01.update();
     }
 
 
      // check collisions
-     /*if(this.checkCollision(this.p1Tooth, this.Lollipop01)) {
+    /* if(this.checkCollision(this.p1Tooth, this.lollipop)) {
         this.p1Tooth.reset();
-        //this.LollipopDestroy(this.Lollipop);
+        this.lollipopDestroy(this.lollipop);
     }*/
+
+
 
     }
 
