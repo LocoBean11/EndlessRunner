@@ -1,10 +1,10 @@
-class Lollipop extends Phaser.GameObjects.Sprite{
+class Apple extends Phaser.GameObjects.Sprite{
     constructor(scene, x, y, texture, frame) { //pointValue goes after frame
         super(scene, x, y, texture, frame);
         scene.add.existing(this);
         //this.points = pointValue;
         this.moveSpeed = 2; //pixels per frame
-        //this.fasterMoveSpeed = game.settings.lollipopSpeed; //JunkFood move faster after 30 seconds
+        //this.fasterMoveSpeed = game.settings.appleSpeed; //JunkFood move faster after 30 seconds
     }
 
     update() {
@@ -24,6 +24,5 @@ class Lollipop extends Phaser.GameObjects.Sprite{
     //position reset
     reset() {
         this.x = game.config.width;
-        this.y = Phaser.Math.Between(minY, maxY); // Set the random Y-position
     }
 }

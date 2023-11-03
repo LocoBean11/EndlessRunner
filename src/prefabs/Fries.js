@@ -1,4 +1,4 @@
-class Lollipop extends Phaser.GameObjects.Sprite{
+class Fries extends Phaser.GameObjects.Sprite{
     constructor(scene, x, y, texture, frame) { //pointValue goes after frame
         super(scene, x, y, texture, frame);
         scene.add.existing(this);
@@ -24,6 +24,5 @@ class Lollipop extends Phaser.GameObjects.Sprite{
     //position reset
     reset() {
         this.x = game.config.width;
-        this.y = Phaser.Math.Between(minY, maxY); // Set the random Y-position
     }
 }
