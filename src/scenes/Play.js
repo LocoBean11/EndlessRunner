@@ -1,6 +1,8 @@
 class Play extends Phaser.Scene {
     constructor() {
         super('playScene');
+        this.minY = 0;
+        this.maxY = 0;
     }
 
         preload(){
@@ -19,7 +21,6 @@ class Play extends Phaser.Scene {
             // Handle the collision logic here
             // For example, you can destroy the food and update the score
             junkfood01.destroy();
-            
             this.scoreLeft.text = this.p1Score; // Update the displayed score
         }
 
@@ -29,24 +30,34 @@ class Play extends Phaser.Scene {
     }
 
     // Define a "reset" method for a food item
-    resetFoodItem(foodItem) {
+    /*resetFoodItem(foodItem) {
     const minY = borderUISize * 2; // Adjust as needed
     const maxY = game.config.height - (borderUISize * 2); // Adjust as needed
 
     // Reposition the food item to the right side of the screen
     foodItem.x = game.config.width + borderUISize * 6;
     foodItem.y = Phaser.Math.Between(minY, maxY);
-    }
+    }*/
         
 create() {
-
+      this.minY = borderUISize * 2; // Adjust as needed
+      this.maxY = game.config.height - (borderUISize * 2)
+      
       // Create food items and store them in an array
-      this.foodItems = [];
-      this.foodItems.push(this.junkfood01 = new Lollipop(this, 0, 0, 'lollipop', 0, 30).setOrigin(0, 0));
-      this.foodItems.push(this.junkfood02 = new Soda(this, 0, 0, 'soda', 0, 30).setOrigin(0, 0));
-      this.foodItems.push(this.junkfood03 = new Fries(this, 0, 0, 'fries', 0, 30).setOrigin(0, 0));
-      this.foodItems.push(this.healthyfood01 = new Apple(this, 0, 0, 'apple', 0, 30).setOrigin(0, 0));
-      this.foodItems.push(this.healthyfood02 = new Cheese(this, 0, 0, 'cheese', 0, 30).setOrigin(0, 0));
+      this.junkFoodItems = [];
+      this.healthyFoodItems = [];
+
+      this.junkFoodItems.push(
+      new Lollipop(this, 0, 0, 'lollipop', 0, this.minY, this.maxY).setOrigin(0, 0),
+      new Soda(this, 0, 0, 'soda', 0, this.minY, this.maxY).setOrigin(0, 0),
+      new Fries(this, 0, 0, 'fries', 0, this.minY, this.maxY).setOrigin(0, 0)
+      );
+      
+      //Healthy foods add points to the score
+      this.healthyFoodItems.push(
+      new Apple(this, 0, 0, 'apple', 0, this.minY, this.maxY).setOrigin(0, 0),
+      new Cheese(this, 0, 0, 'cheese', 0, this.minY, this.maxY).setOrigin(0, 0)
+      );
 
     //Looping BGM
     /*this.backgroundMusic = this.sound.add('surfingstars'); 
@@ -101,25 +112,21 @@ create() {
     this.physics.add.collider(this.p1Tooth, this.healthyfood02, this.handleCollision, null, this);
 
 
-    // Randomly spawn food on the right side
-    const minY = borderUISize * 2; // Adjust as needed
-    const maxY = game.config.height - (borderUISize * 2); // Adjust as needed
+    // Randomly spawn junk food on the right side
 
     this.junkfood01 = new Lollipop(
         this,
         game.config.width + borderUISize * 6,
-        Phaser.Math.Between(minY, maxY),
+        Phaser.Math.Between(this.minY, this.maxY),
         'lollipop',
         0,
         30
       ).setOrigin(0, 0);
 
-        
-
       this.junkfood02 = new Soda(
         this,
         game.config.width + borderUISize * 6,
-        Phaser.Math.Between(minY, maxY),
+        Phaser.Math.Between(this.minY, this.maxY),
         'soda',
         0,
         30
@@ -128,7 +135,7 @@ create() {
       this.junkfood03 = new Fries(
         this,
         game.config.width + borderUISize * 6,
-        Phaser.Math.Between(minY, maxY),
+        Phaser.Math.Between(this.minY, this.maxY),
         'fries',
         0,
         30
@@ -138,7 +145,7 @@ create() {
       this.healthyfood01 = new Apple(
         this,
         game.config.width + borderUISize * 6,
-        Phaser.Math.Between(minY, maxY),
+        Phaser.Math.Between(this.minY, this.maxY),
         'apple',
         0,
         30
@@ -147,7 +154,7 @@ create() {
       this.healthyfood02 = new Cheese(
         this,
         game.config.width + borderUISize * 6,
-        Phaser.Math.Between(minY, maxY),
+        Phaser.Math.Between(this.minY, this.maxY),
         'cheese',
         0,
         30
@@ -162,7 +169,7 @@ create() {
         this.p1Score = 0;
 
         this.timePassed = 0;
-        this.spawnInterval = 10000; // 10 seconds
+        this.spawnInterval = 5000; // 10 seconds
 
         // display score
         let scoreConfig = {
@@ -192,20 +199,43 @@ create() {
             callbackScope: this,
             loop: false // Do not repeat the timer
           });*/
+          
+    // Create a Lollipop object with minY and maxY values
+    const lollipop = new Lollipop(
+        this,
+        game.config.width + borderUISize * 6,
+        Phaser.Math.Between(this.minY, this.maxY),
+        'lollipop',
+        0,
+        this.minY, // Pass minY
+        this.maxY  // Pass maxY
+    ).setOrigin(0, 0);
+
         }
   
 
   update(){
 
     // Check if food items are out of bounds and reset their positions
-    for (const foodItem of this.foodItems) {
-        if (foodItem.x < -foodItem.width) {
-            this.resetFoodItem(foodItem);
+    for (const junkFoodItem of this.junkFoodItems) {
+        if (junkFoodItem.x < -junkFoodItem.width) {
+            this.resetFoodItem(junkFoodItem, this.minY, this.maxY);
         }
 
         // Check for collisions
-        if (this.checkCollision(this.p1Tooth, foodItem)) {
-            this.handleCollision(this.p1Tooth, foodItem);
+        if (this.checkCollision(this.p1Tooth, junkFoodItem)) {
+            this.handleCollision(this.p1Tooth, junkFoodItem);
+        }
+    }
+
+    for (const healthyFoodItem of this.healthyFoodItems) {
+        if (healthyFoodItem.x < -healthyFoodItem.width) {
+            this.resetFoodItem(healthyFoodItem, this.minY, this.maxY);
+        }
+
+        // Check for collisions
+        if (this.checkCollision(this.p1Tooth, healthyFoodItem)) {
+            this.handleCollision(this.p1Tooth, healthyFoodItem);
         }
     }
 
@@ -213,10 +243,10 @@ create() {
 
     if (keyUP.isDown) {
         // Move the player sprite up
-        this.p1Tooth.setVelocityY(-300); // Adjust the velocity value as needed
+        this.p1Tooth.setVelocityY(-300);
     } else if (keyDOWN.isDown) {
         // Move the player sprite down
-        this.p1Tooth.setVelocityY(300); // Adjust the velocity value as needed
+        this.p1Tooth.setVelocityY(300); 
     } else {
         // Stop the player sprite if neither UP nor DOWN key is pressed
         this.p1Tooth.setVelocityY(0);
@@ -259,8 +289,8 @@ if (this.checkCollision(this.p1Tooth, this.junkfood01)) {
         this.handleCollision(this.p1Tooth, this.junkfood03);
     }
 
-    if (this.junkfood01.x < -this.junkfood01.width) {
-        this.resetFoodItem(this.junkfood01);
+    if (this.healthyfood01.x < -this.healthyfood01.width) {
+        this.resetFoodItem(this.healthyfood01);
     }
 
     }
@@ -271,7 +301,7 @@ if (this.checkCollision(this.p1Tooth, this.junkfood01)) {
 
         // Reposition the food item to the right side of the screen
         foodItem.x = game.config.width + borderUISize * 6;
-        foodItem.y = Phaser.Math.Between(minY, maxY);
+        foodItem.y = Phaser.Math.Between(this.minY, this.maxY);
     }
   
 }
