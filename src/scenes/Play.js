@@ -7,6 +7,7 @@ class Play extends Phaser.Scene {
             this.load.image('background', './assets/MouthBackground.png');
             this.load.image('tooth', './assets/tooth.png');
             this.load.image('apple', './assets/apple.png');
+            this.load.image('cheese', './assets/cheese.png');
             this.load.image('fries', './assets/fries.png');
             this.load.image('lollipop', './assets/lollipop.png');
             this.load.image('soda', './assets/soda.png');
@@ -44,8 +45,8 @@ create() {
       this.foodItems.push(this.junkfood01 = new Lollipop(this, 0, 0, 'lollipop', 0, 30).setOrigin(0, 0));
       this.foodItems.push(this.junkfood02 = new Soda(this, 0, 0, 'soda', 0, 30).setOrigin(0, 0));
       this.foodItems.push(this.junkfood03 = new Fries(this, 0, 0, 'fries', 0, 30).setOrigin(0, 0));
-
-      // ... (other setup)
+      this.foodItems.push(this.healthyfood01 = new Apple(this, 0, 0, 'apple', 0, 30).setOrigin(0, 0));
+      this.foodItems.push(this.healthyfood02 = new Cheese(this, 0, 0, 'cheese', 0, 30).setOrigin(0, 0));
 
     //Looping BGM
     /*this.backgroundMusic = this.sound.add('surfingstars'); 
@@ -70,7 +71,7 @@ create() {
 
     //add tooth (p1)
     this.p1Tooth = this.physics.add.sprite(game.config.width * -2, game.config.height /2 - borderUISize - borderPadding, 'tooth').setOrigin(0.5, 0);
-    this.p1Tooth.setScale(1.5);
+    this.p1Tooth.setScale(1.6);
 
     // Set up other properties for the player sprite
     this.p1Tooth.setCollideWorldBounds(true);
@@ -87,6 +88,9 @@ create() {
     //Add healthy food
     this.healthyfood01 = new Apple(this, game.config.width + borderUISize*6, borderUISize*4, 'apple', 0, 30).setOrigin(0, 0);
     this.healthyfood01.setScale(1.5);
+
+    this.healthyfood02 = new Cheese(this, game.config.width + borderUISize*6, borderUISize*4, 'cheese', 0, 30).setOrigin(0, 0);
+    this.healthyfood02.setScale(1.5);
 
     // Create a collider between the player (this.p1Tooth) and junkfood01
     this.physics.add.collider(this.p1Tooth, this.junkfood01, this.handleCollision, null, this);
@@ -132,6 +136,16 @@ create() {
         0,
         30
       ).setOrigin(0, 0);
+
+      this.healthyfood02 = new Cheese(
+        this,
+        game.config.width + borderUISize * 6,
+        Phaser.Math.Between(minY, maxY),
+        'cheese',
+        0,
+        30
+      ).setOrigin(0, 0);
+
 
     //define keys
     keyUP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
@@ -207,6 +221,7 @@ create() {
         this.junkfood02.update();
         this.junkfood03.update();
         this.healthyfood01.update();
+        this.healthyfood02.update();
     }
 
     // Check if junkfood01 is out of bounds and reset it
