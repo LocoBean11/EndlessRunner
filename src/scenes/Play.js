@@ -20,24 +20,13 @@ class Play extends Phaser.Scene {
             handleCollision(p1Tooth, junkfood01) {
             // Handle the collision logic here
             // For example, you can destroy the food and update the score
-            junkfood01.destroy();
-            this.scoreLeft.text = this.p1Score; // Update the displayed score
+            //junkfood01.destroy();
         }
 
          // Define a function to check for collisions
     checkCollision(object1, object2) {
         return Phaser.Geom.Intersects.RectangleToRectangle(object1.getBounds(), object2.getBounds());
     }
-
-    // Define a "reset" method for a food item
-    /*resetFoodItem(foodItem) {
-    const minY = borderUISize * 2; // Adjust as needed
-    const maxY = game.config.height - (borderUISize * 2); // Adjust as needed
-
-    // Reposition the food item to the right side of the screen
-    foodItem.x = game.config.width + borderUISize * 6;
-    foodItem.y = Phaser.Math.Between(minY, maxY);
-    }*/
         
 create() {
       this.minY = borderUISize * 2; // Adjust as needed
@@ -89,9 +78,9 @@ create() {
     this.p1Tooth.setDragY(200);
 
     //Add junk food
-    //this.junkfood01 = new Lollipop(this, game.config.width + borderUISize*6, borderUISize*4, 'lollipop', 0, 30).setOrigin(0, 0);
-    //this.junkfood02 = new Soda(this, game.config.width + borderUISize*6, borderUISize*4, 'soda', 0, 30).setOrigin(0, 0);
-    //this.junkfood03 = new Fries(this, game.config.width + borderUISize*6, borderUISize*4, 'fries', 0, 30).setOrigin(0, 0);
+    this.junkfood01 = new Lollipop(this, game.config.width + borderUISize*6, borderUISize*4, 'lollipop', 0, 30).setOrigin(0, 0);
+    this.junkfood02 = new Soda(this, game.config.width + borderUISize*6, borderUISize*4, 'soda', 0, 30).setOrigin(0, 0);
+    this.junkfood03 = new Fries(this, game.config.width + borderUISize*6, borderUISize*4, 'fries', 0, 30).setOrigin(0, 0);
 
     //Add healthy food
     this.healthyfood01 = new Apple(this, game.config.width + borderUISize*6, borderUISize*4, 'apple', 0, 30).setOrigin(0, 0);
@@ -101,26 +90,19 @@ create() {
     this.healthyfood02.setScale(1.5);
 
     // Create a collider between the player (this.p1Tooth) and junkfood01
-    this.physics.add.collider(this.p1Tooth, this.junkfood01, this.handleCollision, null, this);
+    this.physics.add.collider(this.p1Tooth, this.junkFoodItems, this.handleCollision, null, this);
 
-    this.physics.add.collider(this.p1Tooth, this.junkfood02, this.handleCollision, null, this);
-
-    this.physics.add.collider(this.p1Tooth, this.junkfood03, this.handleCollision, null, this);
-
-    this.physics.add.collider(this.p1Tooth, this.healthyfood01, this.handleCollision, null, this);
-
-    this.physics.add.collider(this.p1Tooth, this.healthyfood02, this.handleCollision, null, this);
-
+    this.physics.add.collider(this.p1Tooth, this.healthyFoodItems, this.handleCollision, null, this);
 
     // Randomly spawn junk food on the right side
-
     this.junkfood01 = new Lollipop(
         this,
         game.config.width + borderUISize * 6,
         Phaser.Math.Between(this.minY, this.maxY),
         'lollipop',
         0,
-        30
+        this.minY,
+        this.maxY
       ).setOrigin(0, 0);
 
       this.junkfood02 = new Soda(
@@ -129,7 +111,8 @@ create() {
         Phaser.Math.Between(this.minY, this.maxY),
         'soda',
         0,
-        30
+        this.minY,
+        this.maxY
       ).setOrigin(0, 0);
 
       this.junkfood03 = new Fries(
@@ -138,7 +121,8 @@ create() {
         Phaser.Math.Between(this.minY, this.maxY),
         'fries',
         0,
-        30
+        this.minY,
+        this.maxY
       ).setOrigin(0, 0);
 
       //Randomly spawn healthy food
@@ -148,7 +132,8 @@ create() {
         Phaser.Math.Between(this.minY, this.maxY),
         'apple',
         0,
-        30
+        this.minY,
+        this.maxY
       ).setOrigin(0, 0);
 
       this.healthyfood02 = new Cheese(
@@ -157,13 +142,14 @@ create() {
         Phaser.Math.Between(this.minY, this.maxY),
         'cheese',
         0,
-        30
+        this.minY,
+        this.maxY
       ).setOrigin(0, 0);
 
 
-    //define keys
-    keyUP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
-    keyDOWN = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
+        //define keys
+        keyUP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
+        keyDOWN = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
 
         // initialize score
         this.p1Score = 0;
@@ -201,7 +187,7 @@ create() {
           });*/
           
     // Create a Lollipop object with minY and maxY values
-    const lollipop = new Lollipop(
+    /*const lollipop = new Lollipop(
         this,
         game.config.width + borderUISize * 6,
         Phaser.Math.Between(this.minY, this.maxY),
@@ -210,7 +196,14 @@ create() {
         this.minY, // Pass minY
         this.maxY  // Pass maxY
     ).setOrigin(0, 0);
+*/
 
+        // Define a "reset" method for a food item
+        const resetFoodItem = (foodItem) => {
+            foodItem.x = game.config.width + borderUISize * 6;
+            foodItem.y = Phaser.Math.Between(this.minY, this.maxY);
+        };
+        
         }
   
 
@@ -296,8 +289,8 @@ if (this.checkCollision(this.p1Tooth, this.junkfood01)) {
     }
     // Define a "reset" method for a food item
     resetFoodItem(foodItem) {
-        const minY = borderUISize * 2; // Adjust as needed
-        const maxY = game.config.height - (borderUISize * 2); // Adjust as needed
+       // const minY = borderUISize * 2; // Adjust as needed
+        //const maxY = game.config.height - (borderUISize * 2); // Adjust as needed
 
         // Reposition the food item to the right side of the screen
         foodItem.x = game.config.width + borderUISize * 6;
