@@ -14,12 +14,12 @@ class Play extends Phaser.Scene {
             this.load.audio('surfingstars', './assets/surfingstars.mp3');
         }
 
-                // Define a collision callback function
-        handleCollision(p1Tooth, junkfood01) {
+            // Define a collision callback function
+            handleCollision(p1Tooth, junkfood01) {
             // Handle the collision logic here
             // For example, you can destroy the food and update the score
             junkfood01.destroy();
-            this.p1Score += 10;
+            
             this.scoreLeft.text = this.p1Score; // Update the displayed score
         }
 
@@ -57,11 +57,8 @@ create() {
     this.MouthBackground = this.add.tileSprite(0, 0, 640, 480, 'background').setOrigin(0, 0);
 
     // reset parameters
-    this.barrierSpeed = -450;
-    this.barrierSpeedMax = -1000;
-    //level = 0;
-    this.extremeMODE = false;
-    //this.shadowLock = false;
+    this.ScreenEdgeSpeed = -450;
+    this.ScreenEdgeSpeedMax = -1000;
 
      // white borders
      this.add.rectangle(0, 0, game.config.width, borderUISize, 0xFFFFFF).setOrigin(0 ,0);
@@ -95,6 +92,14 @@ create() {
     // Create a collider between the player (this.p1Tooth) and junkfood01
     this.physics.add.collider(this.p1Tooth, this.junkfood01, this.handleCollision, null, this);
 
+    this.physics.add.collider(this.p1Tooth, this.junkfood02, this.handleCollision, null, this);
+
+    this.physics.add.collider(this.p1Tooth, this.junkfood03, this.handleCollision, null, this);
+
+    this.physics.add.collider(this.p1Tooth, this.healthyfood01, this.handleCollision, null, this);
+
+    this.physics.add.collider(this.p1Tooth, this.healthyfood02, this.handleCollision, null, this);
+
 
     // Randomly spawn food on the right side
     const minY = borderUISize * 2; // Adjust as needed
@@ -108,6 +113,8 @@ create() {
         0,
         30
       ).setOrigin(0, 0);
+
+        
 
       this.junkfood02 = new Soda(
         this,
