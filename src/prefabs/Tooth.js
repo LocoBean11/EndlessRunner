@@ -1,5 +1,5 @@
 class Tooth extends Phaser.GameObjects.Sprite{
-    constructor(scene, x, y, texture, frame) { //pointValue goes after frame
+    constructor(scene, x, y, texture, frame) { 
         super(scene, x, y, texture, frame);
         scene.add.existing(this);
         
@@ -9,6 +9,10 @@ class Tooth extends Phaser.GameObjects.Sprite{
 
     update() {
         
+    }
+
+    get getY () {
+        return this.y;
     }
 
     //position reset

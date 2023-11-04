@@ -7,7 +7,6 @@ class Lollipop extends Phaser.GameObjects.Sprite{
 
         this.minY = minY; // Minimum Y-coordinate
         this.maxY = maxY; // Maximum Y-coordinate
-        //this.fasterMoveSpeed = game.settings.lollipopSpeed; //JunkFood move faster after 30 seconds
     }
 
     
