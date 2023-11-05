@@ -9,6 +9,7 @@ class Play extends Phaser.Scene {
             this.load.image('background', './assets/MouthBackground.png');
             this.load.image('tooth', './assets/tooth.png');
             this.load.image('apple', './assets/apple.png');
+            this.load.image('carrot', './assets/carrot.png');
             this.load.image('cheese', './assets/cheese.png');
             this.load.image('fries', './assets/fries.png');
             this.load.image('lollipop', './assets/lollipop.png');
@@ -19,12 +20,11 @@ class Play extends Phaser.Scene {
 
             // Define a collision callback function
             handleCollision(foodItem) {
-            // For example, you can destroy the food and update the score
             this.resetFoodItem(foodItem);
         }
 
          // Define a function to check for collisions
-    checkCollision(object1, object2) {
+        checkCollision(object1, object2) {
         return Phaser.Geom.Intersects.RectangleToRectangle(object1.getBounds(), object2.getBounds());
     }
         
@@ -45,7 +45,8 @@ create() {
       //Healthy foods add points to the score
       this.healthyFoodItems.push(
       new Apple(this, 0, 0, 'apple', 0, this.minY, this.maxY, 20).setOrigin(0, 0),
-      new Cheese(this, 0, 0, 'cheese', 0, this.minY, this.maxY, 20).setOrigin(0, 0)
+      new Cheese(this, 0, 0, 'cheese', 0, this.minY, this.maxY, 20).setOrigin(0, 0),
+      new Carrot(this, 0, 0, 'carrot', 0, this.minY, this.maxY, 20).setOrigin(0, 0)
       );
 
     //Looping BGM
@@ -54,7 +55,6 @@ create() {
     this.backgroundMusic.setVolume(0.1);
     this.backgroundMusicSpeed = 1;
     
-
     //Background sprite
     this.MouthBackground = this.add.tileSprite(0, 0, 640, 480, 'background').setOrigin(0, 0);
     this.backgroundSpeed = 4;
@@ -73,7 +73,7 @@ create() {
      this.emptyspaceTop = this.add.tileSprite(0, 40, 640, 64, 'emptyspace').setOrigin(0, 0);
      this.emptyspaceBottom = this.add.tileSprite(0, 376, 640, 64, 'emptyspace').setOrigin(0, 0);
 
-    //add tooth (p1)
+    //Add tooth (p1)
     this.p1Tooth = this.physics.add.sprite(game.config.width /7, game.config.height /2 - borderUISize - borderPadding, 'tooth').setOrigin(0.5, 0);
     this.p1Tooth.setScale(1.6);
 
@@ -94,10 +94,10 @@ create() {
     this.healthyfood01.setScale(1.5);
     this.healthyfood02 = new Cheese(this, game.config.width + borderUISize*6, borderUISize*4, 'cheese', 0, 0, 30, 20).setOrigin(0, 0);
     this.healthyfood02.setScale(1.5);
-    /*this.healthyfood03 = new (this, game.config.width + borderUISize*6, borderUISize*4, '', 0, 30).setOrigin(0, 0);
-    this.healthyfood03.setScale(1.5);*/
+    this.healthyfood03 = new Carrot(this, game.config.width + borderUISize*6, borderUISize*4, 'carrot', 0, 30, 20).setOrigin(0, 0);
+    this.healthyfood03.setScale(1.5);
 
-    // Create colliders between the player and food
+    // Create colliders between the player, food and borders
     this.physics.add.collider(this.p1Tooth, this.junkFoodItems, this.handleCollision, null, this);
     this.physics.add.collider(this.p1Tooth, this.healthyFoodItems, this.handleCollision, null, this);
     this.physics.add.collider(this.p1Tooth, this.emptyspaceTop, this.handleCollision, null, this);
@@ -155,8 +155,17 @@ create() {
         this.maxY
       ).setOrigin(0, 0);
 
+      this.healthyfood03 = new Carrot(
+        this,
+        game.config.width + borderUISize * 6,
+        Phaser.Math.Between(this.minY, this.maxY),
+        'carrot',
+        0,
+        this.minY,
+        this.maxY
+      ).setOrigin(0, 0);
 
-        //define keys
+        //Define keys
         keyUP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
         keyDOWN = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
 
@@ -173,10 +182,6 @@ create() {
         backgroundColor: '#123456',
         color: '#FFFF00',
         align: 'right',
-        /*padding: {
-        top: 5,
-        bottom: 5,
-        },*/
         fixedWidth: 100
         }
 
@@ -204,8 +209,8 @@ create() {
         resetFoodItem(this.junkfood03);
         resetFoodItem(this.healthyfood01);
         resetFoodItem(this.healthyfood02);
-
-    }
+        resetFoodItem(this.healthyfood03);
+    }//End of create method
 
         increasefoodItemSpeed() {
             this.junkfood01.increaseSpeed(1.5);
@@ -213,14 +218,16 @@ create() {
             this.junkfood03.increaseSpeed(1.5);
             this.healthyfood01.increaseSpeed(1.5);
             this.healthyfood02.increaseSpeed(1.5);
+            this.healthyfood03.increaseSpeed(1.5);
             this.backgroundSpeed += 1.5;
             this.backgroundMusicSpeed += 0.1; //Increase music speed
         }
   
-
   update(){
     this.backgroundMusic.setRate(this.backgroundMusicSpeed);
     this.scoreLeft.text = this.p1Score;
+    if(!this.gameOver){
+
     // Check if food items are out of bounds and reset their positions
     for (const junkFoodItem of this.junkFoodItems) {
         if (junkFoodItem.x < -junkFoodItem.width) {
@@ -245,6 +252,7 @@ create() {
         }
     }
 
+    //Food stays between teeth background
     if(this.checkCollision(this.junkfood01, this.emptyspaceTop) || this.checkCollision(this.junkfood01, this.emptyspaceBottom)) {
         this.handleCollision(this.junkfood01);
     }
@@ -265,6 +273,10 @@ create() {
         this.handleCollision(this.healthyfood02);
     }
 
+    if(this.checkCollision(this.healthyfood03, this.emptyspaceTop) || this.checkCollision(this.healthyfood03, this.emptyspaceBottom)) {
+        this.handleCollision(this.healthyfood03);
+    }
+
 
     this.MouthBackground.tilePositionX += this.backgroundSpeed;  // update tile sprite
 
@@ -279,49 +291,81 @@ create() {
         this.p1Tooth.setVelocityY(0);
     }
 
-
-    if(!this.gameOver){
         this.p1Tooth.update();
         this.junkfood01.update();
         this.junkfood02.update();
         this.junkfood03.update();
         this.healthyfood01.update();
         this.healthyfood02.update();
+        this.healthyfood03.update();
+
+    // Check for collisions between tooth and food
+    if (this.checkCollision(this.p1Tooth, this.junkfood01) ||
+    this.checkCollision(this.p1Tooth, this.junkfood02 ) || 
+    this.checkCollision(this.p1Tooth, this.junkfood03)) {
+    //this.handleCollision(this.junkfood01);
+    this.gameOver = true;
     }
 
     // Check for collisions
-    if (this.checkCollision(this.p1Tooth, this.junkfood01)) {
-    this.handleCollision(this.junkfood01);
-    }
-
-    // Check if junkfood02 is out of bounds and reset it
-    if (this.checkCollision(this.p1Tooth, this.junkfood02)) {
-        this.handleCollision(this.junkfood02);
-    }
-
-    // Check if junkfood03 is out of bounds and reset it
-    if (this.checkCollision(this.p1Tooth, this.junkfood03)) {
-        this.handleCollision(this.junkfood03);
-    }
-
-     // Check if healthyfood01 is out of bounds and reset it
     if (this.checkCollision(this.p1Tooth, this.healthyfood01)) {
          //Score add and repaint
         this.p1Score += 20;
-        this.handleCollision(this.healthyfood01);
-       
+        this.handleCollision(this.healthyfood01); 
     }
     
-
     // Check if healthyfood02 is out of bounds and reset it
     if (this.checkCollision(this.p1Tooth, this.healthyfood02)) {
         //Score add and repaint
         this.p1Score += 10;
         this.handleCollision(this.healthyfood02);
     }
-    
 
+    // Check if healthyfood02 is out of bounds and reset it
+    if (this.checkCollision(this.p1Tooth, this.healthyfood03)) {
+        //Score add and repaint
+        this.p1Score += 15;
+        this.handleCollision(this.healthyfood03);
     }
+
+    //Makes sure all food doesn't overlap when they spawn
+    if (this.checkCollision(this.junkfood01, this.junkfood02) || 
+        this.checkCollision(this.junkfood01, this.junkfood03) || 
+        this.checkCollision(this.junkfood01, this.healthyfood01) || 
+        this.checkCollision(this.junkfood01, this.healthyfood02)) 
+        this.checkCollision(this.junkfood01, this.healthyfood03)
+        {
+        this.handleCollision(this.junkfood01);
+        }
+
+        if (this.checkCollision(this.junkfood02, this.junkfood03) || 
+        this.checkCollision(this.junkfood02, this.healthyfood01) || 
+        this.checkCollision(this.junkfood02, this.healthyfood02)) 
+        this.checkCollision(this.junkfood02, this.healthyfood03)
+        {
+        this.handleCollision(this.junkfood02);
+        }
+
+        if (this.checkCollision(this.junkfood03, this.healthyfood01) || 
+        this.checkCollision(this.junkfood03, this.healthyfood02)) 
+        this.checkCollision(this.junkfood03, this.healthyfood03)
+        {
+        this.handleCollision(this.junkfood03);
+        }
+
+        if (this.checkCollision(this.healthyfood01, this.healthyfood02)) 
+        this.checkCollision(this.healthyfood01, this.healthyfood03)
+        {
+        this.handleCollision(this.healthyfood01);
+        }
+
+        if (this.checkCollision(this.healthyfood02, this.healthyfood03)) 
+        {
+        this.handleCollision(this.healthyfood02);
+        }
+    }//gameOver
+
+    }//End of update method
 
     //Reset method for foodItem
     resetFoodItem(foodItem) {
@@ -331,5 +375,4 @@ create() {
         
     }
 
-  
-}
+}//End of class
