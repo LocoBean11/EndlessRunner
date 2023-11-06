@@ -8,6 +8,8 @@ class Play extends Phaser.Scene {
         preload(){
             this.load.image('background', './assets/MouthBackground.png');
             this.load.image('tooth', './assets/tooth.png');
+            this.load.image('toothblink', './assets/toothblink.png');
+            this.load.image('toothhappy', './assets/toothhappy.png');
             this.load.image('toothdeath', './assets/ToothDeath.png');
             this.load.image('apple', './assets/apple.png');
             this.load.image('carrot', './assets/carrot.png');
@@ -79,20 +81,14 @@ create() {
     this.p1Tooth = this.physics.add.sprite(game.config.width /7, game.config.height /2 - borderUISize - borderPadding, 'tooth').setOrigin(0.5, 0);
     this.p1Tooth.setScale(1.6);
 
-    // Set up other properties for the tooth
+    this.blink = true;
+
+    //Set up other properties for the tooth
     this.p1Tooth.setCollideWorldBounds(true);
     this.p1Tooth.setBounce(0.5);
     this.p1Tooth.setImmovable();
     this.p1Tooth.setMaxVelocity(0, 600);
     this.p1Tooth.setDragY(200);
-
-    //Create tooth death animation
-    this.anims.create({
-        key: 'toothCollision',
-        frames: this.anims.generateFrameNumbers('toothdeath', { start: 0, end: 0 }),
-        frameRate: 10, // Adjust the frame rate as needed
-        repeat: 0, // Set to 0 to play the animation only once
-    });
 
     //Add junk food
     this.junkfood01 = new Lollipop(this, game.config.width + borderUISize*6, borderUISize*4, 'lollipop', 0, this.minY, this.maxY).setOrigin(0, 0);
@@ -208,6 +204,24 @@ create() {
             loop: true // Timer repeats every 10 seconds
           });
 
+          //Set a timer to animate tooth blink
+          this.time.addEvent({
+            delay: 2000, // 3 seconds in milliseconds
+            callback: this.toothblink,
+            callbackScope: this,
+            loop: true, // Timer repeats every 3 seconds
+            startAt: 100
+          });
+
+          //Set a timer to reset tooth blink
+          this.time.addEvent({
+            delay: 2000, // 3 seconds in milliseconds
+            callback: this.resetblink,
+            callbackScope: this,
+            loop: true // Timer repeats every 3 seconds
+             
+          });
+
         // Define a reset method for a food item
         const resetFoodItem = (foodItem) => {
             foodItem.x = game.config.width + borderUISize * 6;
@@ -223,6 +237,8 @@ create() {
     }//End of create method
 
         increasefoodItemSpeed() {
+            if(!this.gameOver){
+
             this.junkfood01.increaseSpeed(1.5);
             this.junkfood02.increaseSpeed(1.5);
             this.junkfood03.increaseSpeed(1.5);
@@ -231,13 +247,41 @@ create() {
             this.healthyfood03.increaseSpeed(1.5);
             this.backgroundSpeed += 1.5;
             this.backgroundMusicSpeed += 0.1; //Increase music speed
+            
+            let Speedtext = this.add.text(320, 240, "Speed Increase!", 96).setOrigin(0, 0.5);
+            Speedtext.setBlendMode('ADD').setTint(0xFFFFFF);
+            this.tweens.add({
+                targets: [Speedtext],
+                duration: 1500,
+                x: { from: 320, to: 320 },
+                alpha: { from: 0.9, to: 0 },
+                onComplete: function() {
+                    Speedtext.destroy();    
+                }
+            });
+        }
+        }
+        
+        toothblink(){
+            if(!this.gameOver){
+            this.p1Tooth.destroy();
+            this.p1Tooth = this.physics.add.sprite(this.p1Tooth.x, this.p1Tooth.y, 'toothblink').setOrigin(0.5, 0);
+            this.p1Tooth.setScale(1.6);      
+        }
+        }//end of toothblink
+
+        resetblink(){
+            if(!this.gameOver){
+            this.p1Tooth.destroy();
+            this.p1Tooth = this.physics.add.sprite(this.p1Tooth.x, this.p1Tooth.y, 'tooth').setOrigin(0.5, 0);
+            this.p1Tooth.setScale(1.6);
+            }
         }
   
   update(){
     this.backgroundMusic.setRate(this.backgroundMusicSpeed);
     this.scoreLeft.text = this.p1Score;
     if(!this.gameOver){
-
     // Check if food items are out of bounds and reset their positions
     for (const junkFoodItem of this.junkFoodItems) {
         if (junkFoodItem.x < -junkFoodItem.width) {
@@ -309,40 +353,50 @@ create() {
         this.healthyfood02.update();
         this.healthyfood03.update();
 
-    // Check for collisions between tooth and food
+    // Check for collisions between tooth and junk foods
     if (this.checkCollision(this.p1Tooth, this.junkfood01) ||
     this.checkCollision(this.p1Tooth, this.junkfood02 ) || 
     this.checkCollision(this.p1Tooth, this.junkfood03)) {
-    //this.handleCollision(this.junkfood01);
+
+    //Play death animation
+    this.p1Tooth.destroy();
+    this.p1Tooth = this.physics.add.sprite(this.p1Tooth.x, this.p1Tooth.y, 'toothdeath').setOrigin(0.5, 0);
+    this.p1Tooth.setScale(1.6);
+    
     this.gameOver = true;
+    
+    }//end of if statement
 
-         //Play death animation
-         if (this.checkCollision(this.p1Tooth, junkFoodItem)) {
-            // Play the collision animation for the tooth
-            this.p1Tooth.anims.play('toothdeath');
-            
-        }
-    }
-
-    // Check for collisions
+    // Check for collisions between healthy foods
     if (this.checkCollision(this.p1Tooth, this.healthyfood01)) {
+        this.p1Tooth.destroy();
+        this.p1Tooth = this.physics.add.sprite(this.p1Tooth.x, this.p1Tooth.y, 'toothhappy').setOrigin(0.5, 0);
+        this.p1Tooth.setScale(1.6);
          //Score add and repaint
         this.p1Score += 20;
-        this.sound.play('itemacquire', { volume: 0.5 }); 
+        this.sound.play('itemsfx', { volume: 0.2 }); 
         this.handleCollision(this.healthyfood01); 
     }
     
     // Check if healthyfood02 is out of bounds and reset it
     if (this.checkCollision(this.p1Tooth, this.healthyfood02)) {
+        this.p1Tooth.destroy();
+        this.p1Tooth = this.physics.add.sprite(this.p1Tooth.x, this.p1Tooth.y, 'toothhappy').setOrigin(0.5, 0);
+        this.p1Tooth.setScale(1.6);
         //Score add and repaint
         this.p1Score += 10;
+        this.sound.play('itemsfx', { volume: 0.2 }); 
         this.handleCollision(this.healthyfood02);
     }
 
     // Check if healthyfood03 is out of bounds and reset it
     if (this.checkCollision(this.p1Tooth, this.healthyfood03)) {
+        this.p1Tooth.destroy();
+        this.p1Tooth = this.physics.add.sprite(this.p1Tooth.x, this.p1Tooth.y, 'toothhappy').setOrigin(0.5, 0);
+        this.p1Tooth.setScale(1.6);
         //Score add and repaint
         this.p1Score += 15;
+        this.sound.play('itemsfx', { volume: 0.2 }); 
         this.handleCollision(this.healthyfood03);
     }
 
@@ -391,7 +445,6 @@ create() {
         // Reposition the food item to the right side of the screen
         foodItem.x = game.config.width + borderUISize * 6;
         foodItem.y = Phaser.Math.Between(this.minY, this.maxY);
-        
     }
 
 }//End of class
