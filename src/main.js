@@ -21,7 +21,7 @@
             }
         }
     },
-    scene: [ Play ]
+    scene: [ Title, Play ]
     }
         //define game
     let game = new Phaser.Game(config);
