@@ -37,7 +37,7 @@ create() {
     credits5Text.setFontSize(20); 
     credits5Text.setOrigin(0.5, 0.5); // Center the text
 
-    const credits6Text = this.add.text(515, 470, "Hit DOWN arrow key to go back")
+    const credits6Text = this.add.text(490, 440, "Hit DOWN arrow key to go back");
     credits6Text.fontFamily = 'Times New Roman';
     credits6Text.setFontSize(14); 
     credits6Text.setOrigin(0.5, 0.5); // Center the text

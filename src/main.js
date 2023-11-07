@@ -2,7 +2,7 @@
     //Game Title: Toothache
     //Appoximate hours spent: 35
     //The music speeds up to match the increasingly frantic pace of the game
-    //
+    //The player controls an expressive and animated tooth in an interesting and unusual environment for an endless runner
 
     let config = {
         type: Phaser.CANVAS,
@@ -14,7 +14,7 @@
     physics: {
         default: 'arcade',
         arcade: {
-            debug: true,
+            //debug: true,
             gravity: {
                 x: 0,
                 y: 0
