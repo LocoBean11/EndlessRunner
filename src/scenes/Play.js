@@ -14,11 +14,15 @@ class Play extends Phaser.Scene {
             this.load.image('apple', './assets/apple.png');
             this.load.image('carrot', './assets/carrot.png');
             this.load.image('cheese', './assets/cheese.png');
+            //Load sparkle sprite sheet
+            this.load.spritesheet('sparkle', './assets/sparkle.png', {frameWidth: 64, frameHeight: 32, startFrame: 0, endFrame: 2});
+            
             this.load.image('fries', './assets/fries.png');
             this.load.image('lollipop', './assets/lollipop.png');
             this.load.image('soda', './assets/soda.png');
             this.load.image('emptyspace', './assets/emptyspace.png');
             this.load.audio('itemsfx', './assets/audio/itemacquire.mp3');
+            this.load.audio('gameover', './assets/audio/gameOverJingle.wav');
             this.load.audio('surfingstars', './assets/audio/surfingstars.mp3');
         }
 
@@ -139,6 +143,7 @@ create() {
         this.minY,
         this.maxY
       ).setOrigin(0, 0);
+      //End of randomly spawning junk food
 
       //Randomly spawn healthy food
       this.healthyfood01 = new Apple(
@@ -170,18 +175,19 @@ create() {
         this.minY,
         this.maxY
       ).setOrigin(0, 0);
+      //End of randomly spawning healthy food
 
         //Define keys
         keyUP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
         keyDOWN = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
 
-        // Initialize the score
+        //Initialize the score
         this.p1Score = 0;
 
         this.timePassed = 0;
         this.spawnInterval = 3000; //  seconds
 
-        // display score
+        //Display score
         let scoreConfig = {
         fontFamily: 'Times New Roman',
         fontSize: '28px',
@@ -190,6 +196,14 @@ create() {
         align: 'right',
         fixedWidth: 100
         }
+
+        // Create a sparkle animation
+        this.anims.create({
+            key: 'sparkle',
+            frames: this.anims.generateFrameNumbers('sparkle', { start: 0, end: 2 }),
+            frameRate: 10,
+            repeat: 0, // Play the animation only once
+        });
 
         this.scoreLeft = this.add.text(borderUISize + borderPadding, borderUISize + borderPadding*2, this.p1Score, scoreConfig);
 
@@ -359,9 +373,14 @@ create() {
     this.checkCollision(this.p1Tooth, this.junkfood03)) {
 
     //Play death animation
+    this.sound.play('gameover', { volume: 0.2 }); 
     this.p1Tooth.destroy();
     this.p1Tooth = this.physics.add.sprite(this.p1Tooth.x, this.p1Tooth.y, 'toothdeath').setOrigin(0.5, 0);
     this.p1Tooth.setScale(1.6);
+    
+    //this.sound.stop();
+    this.backgroundMusic.stop();
+    this.scene.start("gameoverScene");
     
     this.gameOver = true;
     
@@ -372,8 +391,11 @@ create() {
         this.p1Tooth.destroy();
         this.p1Tooth = this.physics.add.sprite(this.p1Tooth.x, this.p1Tooth.y, 'toothhappy').setOrigin(0.5, 0);
         this.p1Tooth.setScale(1.6);
+        // Play the sparkle animation
+  const sparkle = this.add.sprite(this.healthyfood01.x, this.healthyfood01.y, 'sparkle').setOrigin(0.5, 0.5);
+  sparkle.play('sparkle');
          //Score add and repaint
-        this.p1Score += 20;
+        this.p1Score += 200;
         this.sound.play('itemsfx', { volume: 0.2 }); 
         this.handleCollision(this.healthyfood01); 
     }
@@ -383,8 +405,11 @@ create() {
         this.p1Tooth.destroy();
         this.p1Tooth = this.physics.add.sprite(this.p1Tooth.x, this.p1Tooth.y, 'toothhappy').setOrigin(0.5, 0);
         this.p1Tooth.setScale(1.6);
+        // Play the sparkle animation
+  const sparkle = this.add.sprite(this.healthyfood01.x, this.healthyfood01.y, 'sparkle').setOrigin(0.5, 0.5);
+  sparkle.play('sparkle');
         //Score add and repaint
-        this.p1Score += 10;
+        this.p1Score += 100;
         this.sound.play('itemsfx', { volume: 0.2 }); 
         this.handleCollision(this.healthyfood02);
     }
@@ -394,11 +419,14 @@ create() {
         this.p1Tooth.destroy();
         this.p1Tooth = this.physics.add.sprite(this.p1Tooth.x, this.p1Tooth.y, 'toothhappy').setOrigin(0.5, 0);
         this.p1Tooth.setScale(1.6);
+        // Play the sparkle animation
+  const sparkle = this.add.sprite(this.healthyfood01.x, this.healthyfood01.y, 'sparkle').setOrigin(0.5, 0.5);
+  sparkle.play('sparkle');
         //Score add and repaint
-        this.p1Score += 15;
+        this.p1Score += 150;
         this.sound.play('itemsfx', { volume: 0.2 }); 
         this.handleCollision(this.healthyfood03);
-    }
+    }//End of check for out of bounds
 
     //Makes sure all food doesn't overlap when they spawn
     if (this.checkCollision(this.junkfood01, this.junkfood02) || 

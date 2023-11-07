@@ -1,5 +1,5 @@
     //Aaron Rodriguez
-    //Tooth & Brush
+    //Toothache
     //
     //
     //
@@ -21,22 +21,15 @@
             }
         }
     },
-    scene: [ Title, Play ]
+    scene: [ Title, Instructions, Play, GameOver ]
     }
+
         //define game
     let game = new Phaser.Game(config);
 
     // define globals
-    //let centerX = game.config.width/2;
-    //let centerY = game.config.height/2;
-    //let w = game.config.width;
-    //let h = game.config.height;
     const textSpacer = 64;
     let p1Tooth = null;
-    //const paddleWidth = 16;
-    //const paddleHeight = 128;
-    //const paddleVelocity = 150;
-    //let level;
     let highScore;
     let newHighScore = false;
     //let cursors;
