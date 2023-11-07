@@ -7,11 +7,15 @@ class Title extends Phaser.Scene {
     preload() {
       this.load.image('title', './assets/Toothachetitle.png'); 
       this.load.audio('select', './assets/audio/select.wav');
+      this.load.audio('titlemusic', './assets/audio/titlemusic.mp3');
   }
 
 create() {
   this.add.image(0, 0, 'title').setOrigin(0, 0);
   this.selectSoundEffect = this.sound.add('select'); 
+  this.titlescreenMusic = this.sound.add('titlemusic');
+  this.titlescreenMusic.play({ loop: true });
+  this.titlescreenMusic.setVolume(0.1); 
 
   const titleText = this.add.text(320, 210, "Press UP arrow to start")
   //titleText.fontFamily = 'Times New Roman';
@@ -29,13 +33,6 @@ create() {
   const title4Text = this.add.text(320, 405, "Aaron Rodriguez 2023");
   title4Text.setFontSize(17); 
   title4Text.setOrigin(0.5, 0.5); // Center the text
- 
-  /*this.add.bitmapText(centerX, centerY + textSpacer,
-    'gem', 'Move using the UP and DOWN arrow keys.', 24).setOrigin(0.5);
-    this.add.bitmapText(centerX, centerY + textSpacer*3,
-    'gem',
-    "Collect Apples, Cheese and Carrots. Avoid Lollipops, Sodas and Fries or it's GAME OVER",
-     36).setOrigin(0.5);*/
 
       //Define keys
       keyUP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
@@ -46,12 +43,14 @@ create() {
       update() {
       if (Phaser.Input.Keyboard.JustDown(keyUP)) {
         this.sound.play('select', { volume: 0.2 }); 
-        this.scene.start("playScene");    
+        this.scene.start("playScene"); 
+        this.titlescreenMusic.stop();  
       }
 
       if (Phaser.Input.Keyboard.JustDown(keyDOWN)) {
         this.sound.play('select', { volume: 0.2 }); 
         this.scene.start("instructionsScene");
+        this.titlescreenMusic.stop();  
       }
      /*   if(Phaser.Input.Keyboard.JustDown(keyDOWN)) {
           this.sound.play('select', { volume: 0.2 }); 
@@ -60,6 +59,7 @@ create() {
       if(Phaser.Input.Keyboard.JustDown(this.keyRIGHT)) {
         this.sound.play('select', { volume: 0.2 }); 
         this.scene.start("creditsScene");
+        this.titlescreenMusic.stop();  
     }
 
   }

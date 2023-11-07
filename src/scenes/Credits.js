@@ -22,17 +22,17 @@ create() {
     credits2Text.setOrigin(0.5, 0.5); // Center the text
 
 
-    const credits3Text = this.add.text(320, 200, "Game Over Jingle: Aaron Rodriguez")
+    const credits3Text = this.add.text(320, 200, "Game Over Jingle and Sound Effects: \n Aaron Rodriguez")
     credits3Text.fontFamily = 'Times New Roman';
     credits3Text.setFontSize(20); 
     credits3Text.setOrigin(0.5, 0.5); // Center the text
 
-    const credits4Text = this.add.text(320, 350, "")
+    const credits4Text = this.add.text(320, 250, "Royalty Free Title Music by HeatleyBros @ \n https://www.youtube.com/watch?v=DykDCJtQQyk ")
     credits4Text.fontFamily = 'Times New Roman';
     credits4Text.setFontSize(20); 
     credits4Text.setOrigin(0.5, 0.5); // Center the text
 
-    const credits5Text = this.add.text(320, 300, "")
+    const credits5Text = this.add.text(320, 300, "Royalty Free Gameplay Music by Free Music @ \n https://www.youtube.com/watch?v=l7SwiFWOQqM")
     credits5Text.fontFamily = 'Times New Roman';
     credits5Text.setFontSize(20); 
     credits5Text.setOrigin(0.5, 0.5); // Center the text
