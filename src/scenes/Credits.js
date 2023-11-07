@@ -1,20 +1,15 @@
-class Instructions extends Phaser.Scene {
+class Credits extends Phaser.Scene {
     constructor() {
-        super("instructionsScene");
+        super("creditsScene");
     }
 preload(){
-    this.load.image('instructions', './assets/Instructions.png'); 
+    this.load.image('credits', './assets/Credits.png'); 
     this.load.audio('hitHurt', './assets/audio/hitHurt.wav');
 }
 
 create() {
-    this.add.image(0, 0, 'instructions').setOrigin(0, 0);
+    this.add.image(0, 0, 'credits').setOrigin(0, 0);
     this.hurtSoundEffect = this.sound.add('hitHurt');
-
-    const instrucText = this.add.text(320, 250, "Move UP")
-    instrucText.fontFamily = 'Times New Roman';
-    instrucText.setFontSize(20); 
-    instrucText.setOrigin(0.5, 0.5); // Center the text
     
     keyDOWN = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
     

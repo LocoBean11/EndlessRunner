@@ -1,7 +1,7 @@
     //Aaron Rodriguez
-    //Toothache
-    //
-    //
+    //Game Title: Toothache
+    //Appoximate hours spent: 35
+    //The music speeds up to match the increasingly frantic pace of the game
     //
 
     let config = {
@@ -21,7 +21,7 @@
             }
         }
     },
-    scene: [ Title, Instructions, Play, GameOver ]
+    scene: [ Title, Instructions, Credits, Play, GameOver ]
     }
 
         //define game

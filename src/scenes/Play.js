@@ -6,6 +6,7 @@ class Play extends Phaser.Scene {
     }
 
         preload(){
+            //Sprites and backgrounds
             this.load.image('background', './assets/MouthBackground.png');
             this.load.image('tooth', './assets/tooth.png');
             this.load.image('toothblink', './assets/toothblink.png');
@@ -15,15 +16,18 @@ class Play extends Phaser.Scene {
             this.load.image('carrot', './assets/carrot.png');
             this.load.image('cheese', './assets/cheese.png');
             //Load sparkle sprite sheet
-            this.load.spritesheet('sparkle', './assets/sparkle.png', {frameWidth: 64, frameHeight: 32, startFrame: 0, endFrame: 2});
-            
+            this.load.spritesheet('sparkle', './assets/sparkle.png', {frameWidth: 64, frameHeight: 32, startFrame: 0, endFrame: 3});
             this.load.image('fries', './assets/fries.png');
             this.load.image('lollipop', './assets/lollipop.png');
             this.load.image('soda', './assets/soda.png');
+
+            //Audio
             this.load.image('emptyspace', './assets/emptyspace.png');
             this.load.audio('itemsfx', './assets/audio/itemacquire.mp3');
             this.load.audio('gameover', './assets/audio/gameOverJingle.wav');
-            this.load.audio('surfingstars', './assets/audio/surfingstars.mp3');
+            this.load.audio('bgmmusic', './assets/audio/PowerUpMusic.mp3');
+            this.load.audio('hitHurt', './assets/audio/hitHurt.wav');
+            this.load.audio('select', './assets/audio/select.wav');
         }
 
             // Define a collision callback function
@@ -57,8 +61,10 @@ create() {
       new Carrot(this, 0, 0, 'carrot', 0, this.minY, this.maxY, 20).setOrigin(0, 0)
       );
 
-    //Looping BGM
-    this.backgroundMusic = this.sound.add('surfingstars'); 
+    //Sounds and looping BGM
+    this.backgroundMusic = this.sound.add('bgmmusic'); 
+    this.hurtSoundEffect = this.sound.add('hitHurt'); 
+    this.selectSoundEffect = this.sound.add('select'); 
     this.backgroundMusic.play({ loop: true });
     this.backgroundMusic.setVolume(0.1);
     this.backgroundMusicSpeed = 1;
@@ -84,8 +90,26 @@ create() {
     //Add tooth (p1)
     this.p1Tooth = this.physics.add.sprite(game.config.width /7, game.config.height /2 - borderUISize - borderPadding, 'tooth').setOrigin(0.5, 0);
     this.p1Tooth.setScale(1.6);
-
+    //Blink set to true
     this.blink = true;
+
+    // Add "GET READY" text
+    let readyText = this.add.text(320, 240, "GET READY", {
+        fontFamily: 'Times New Roman',
+        fontSize: '36px',
+        color: '#FFFFFF'
+    });
+    readyText.setOrigin(0.5); 
+
+    // Fade in and out
+    this.tweens.add({
+        targets: [readyText],
+        duration: 1500, // 1.5 seconds
+        alpha: { from: 3, to: 0 },
+        onComplete: function() {
+            readyText.destroy();
+        }
+    }); //End of Ready text
 
     //Set up other properties for the tooth
     this.p1Tooth.setCollideWorldBounds(true);
@@ -194,14 +218,14 @@ create() {
         backgroundColor: '#123456',
         color: '#FFFF00',
         align: 'right',
-        fixedWidth: 100
+        fixedWidth: 200
         }
 
         // Create a sparkle animation
         this.anims.create({
             key: 'sparkle',
-            frames: this.anims.generateFrameNumbers('sparkle', { start: 0, end: 2 }),
-            frameRate: 10,
+            frames: this.anims.generateFrameNumbers('sparkle', { start: 0, end: 3 }),
+            frameRate: 9,
             repeat: 0, // Play the animation only once
         });
 
@@ -262,7 +286,7 @@ create() {
             this.backgroundSpeed += 1.5;
             this.backgroundMusicSpeed += 0.1; //Increase music speed
             
-            let Speedtext = this.add.text(320, 240, "Speed Increase!", 96).setOrigin(0, 0.5);
+            let Speedtext = this.add.text(120, 240, "Speed Increase!");
             Speedtext.setBlendMode('ADD').setTint(0xFFFFFF);
             this.tweens.add({
                 targets: [Speedtext],
@@ -373,6 +397,7 @@ create() {
     this.checkCollision(this.p1Tooth, this.junkfood03)) {
 
     //Play death animation
+    this.sound.play('hitHurt', { volume: 0.2 }); 
     this.sound.play('gameover', { volume: 0.2 }); 
     this.p1Tooth.destroy();
     this.p1Tooth = this.physics.add.sprite(this.p1Tooth.x, this.p1Tooth.y, 'toothdeath').setOrigin(0.5, 0);
@@ -380,8 +405,12 @@ create() {
     
     //this.sound.stop();
     this.backgroundMusic.stop();
-    this.scene.start("gameoverScene");
-    
+
+     // wait a few seconds before spawning barriers
+     this.time.delayedCall(2500, () => { 
+        this.scene.start("gameoverScene", { score: this.p1Score });
+    });
+
     this.gameOver = true;
     
     }//end of if statement
@@ -392,8 +421,8 @@ create() {
         this.p1Tooth = this.physics.add.sprite(this.p1Tooth.x, this.p1Tooth.y, 'toothhappy').setOrigin(0.5, 0);
         this.p1Tooth.setScale(1.6);
         // Play the sparkle animation
-  const sparkle = this.add.sprite(this.healthyfood01.x, this.healthyfood01.y, 'sparkle').setOrigin(0.5, 0.5);
-  sparkle.play('sparkle');
+        const sparkle = this.add.sprite(this.p1Tooth.x, this.p1Tooth.y, 'sparkle').setOrigin(0.5, 0.5);
+        sparkle.play('sparkle');
          //Score add and repaint
         this.p1Score += 200;
         this.sound.play('itemsfx', { volume: 0.2 }); 
@@ -406,8 +435,8 @@ create() {
         this.p1Tooth = this.physics.add.sprite(this.p1Tooth.x, this.p1Tooth.y, 'toothhappy').setOrigin(0.5, 0);
         this.p1Tooth.setScale(1.6);
         // Play the sparkle animation
-  const sparkle = this.add.sprite(this.healthyfood01.x, this.healthyfood01.y, 'sparkle').setOrigin(0.5, 0.5);
-  sparkle.play('sparkle');
+        const sparkle = this.add.sprite(this.p1Tooth.x, this.p1Tooth.y, 'sparkle').setOrigin(0.5, 0.5);
+        sparkle.play('sparkle');
         //Score add and repaint
         this.p1Score += 100;
         this.sound.play('itemsfx', { volume: 0.2 }); 
@@ -420,8 +449,8 @@ create() {
         this.p1Tooth = this.physics.add.sprite(this.p1Tooth.x, this.p1Tooth.y, 'toothhappy').setOrigin(0.5, 0);
         this.p1Tooth.setScale(1.6);
         // Play the sparkle animation
-  const sparkle = this.add.sprite(this.healthyfood01.x, this.healthyfood01.y, 'sparkle').setOrigin(0.5, 0.5);
-  sparkle.play('sparkle');
+        const sparkle = this.add.sprite(this.p1Tooth.x, this.p1Tooth.y, 'sparkle').setOrigin(0.5, 0.5);
+        sparkle.play('sparkle');
         //Score add and repaint
         this.p1Score += 150;
         this.sound.play('itemsfx', { volume: 0.2 }); 
