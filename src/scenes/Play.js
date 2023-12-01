@@ -8,18 +8,18 @@ class Play extends Phaser.Scene {
         preload(){
             //Sprites and backgrounds
             this.load.image('background', './assets/MouthBackground.png');
-            this.load.image('tooth', './assets/tooth.png');
-            this.load.image('toothblink', './assets/toothblink.png');
-            this.load.image('toothhappy', './assets/toothhappy.png');
+            this.load.image('tooth', './assets/Tooth.png');
+            this.load.image('toothblink', './assets/Toothblink.png');
+            this.load.image('toothhappy', './assets/Toothhappy.png');
             this.load.image('toothdeath', './assets/ToothDeath.png');
-            this.load.image('apple', './assets/apple.png');
-            this.load.image('carrot', './assets/carrot.png');
-            this.load.image('cheese', './assets/cheese.png');
+            this.load.image('apple', './assets/Apple.png');
+            this.load.image('carrot', './assets/Carrot.png');
+            this.load.image('cheese', './assets/Cheese.png');
             //Load sparkle sprite sheet
-            this.load.spritesheet('sparkle', './assets/sparkle.png', {frameWidth: 64, frameHeight: 32, startFrame: 0, endFrame: 3});
-            this.load.image('fries', './assets/fries.png');
-            this.load.image('lollipop', './assets/lollipop.png');
-            this.load.image('soda', './assets/soda.png');
+            this.load.spritesheet('sparkle', './assets/Sparkle.png', {frameWidth: 64, frameHeight: 32, startFrame: 0, endFrame: 3});
+            this.load.image('fries', './assets/Fries.png');
+            this.load.image('lollipop', './assets/Lollipop.png');
+            this.load.image('soda', './assets/Soda.png');
 
             //Audio
             this.load.image('emptyspace', './assets/emptyspace.png');
