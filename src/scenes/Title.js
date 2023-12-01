@@ -52,10 +52,7 @@ create() {
         this.scene.start("instructionsScene");
         this.titlescreenMusic.stop();  
       }
-     /*   if(Phaser.Input.Keyboard.JustDown(keyDOWN)) {
-          this.sound.play('select', { volume: 0.2 }); 
-          this.scene.start("titleScene");
-      }*/
+     
       if(Phaser.Input.Keyboard.JustDown(this.keyRIGHT)) {
         this.sound.play('select', { volume: 0.2 }); 
         this.scene.start("creditsScene");
