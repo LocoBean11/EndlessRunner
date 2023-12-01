@@ -10,8 +10,8 @@ class Play extends Phaser.Scene {
             this.load.image('background', './assets/MouthBackground.png');
             this.load.image('tooth', './assets/Tooth.png');
             this.load.image('toothblink', './assets/ToothBlink.png');
-            this.load.image('toothhappy', './assets/ToothHappy.png');
             this.load.image('toothdeath', './assets/ToothDeath.png');
+            this.load.image('toothhappy', './assets/ToothHappy.png');
             this.load.image('apple', './assets/Apple.png');
             this.load.image('carrot', './assets/Carrot.png');
             this.load.image('cheese', './assets/Cheese.png');
@@ -245,7 +245,7 @@ create() {
           //Set a timer to animate tooth blink
           this.time.addEvent({
             delay: 2000, // 3 seconds in milliseconds
-            callback: this.ToothBlink,
+            callback: this.toothblink,
             callbackScope: this,
             loop: true, // Timer repeats every 3 seconds
             startAt: 100
@@ -300,7 +300,7 @@ create() {
         }
         }
         
-        ToothBlink(){
+        toothblink(){
             if(!this.gameOver){
             this.p1Tooth.destroy();
             this.p1Tooth = this.physics.add.sprite(this.p1Tooth.x, this.p1Tooth.y, 'toothblink').setOrigin(0.5, 0);
